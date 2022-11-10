@@ -1,0 +1,81 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><meta property="og:site_name" content="JsonChen Blog"><meta property="og:type" content="article"><meta property="og:image" content="https://chenxkang.github.io/images/post-bg-coffee.jpeg"><meta property="twitter:image" content="https://chenxkang.github.io/images/post-bg-coffee.jpeg"><meta name=title content="如何使用Github搭建个人博客"><meta property="og:title" content="如何使用Github搭建个人博客"><meta property="twitter:title" content="如何使用Github搭建个人博客"><meta name=description content="本文将详细介绍如何使用 Hugo+Github Pages+Github Action 方案搭建个人博客，保姆级别哦！"><meta property="og:description" content="本文将详细介绍如何使用 Hugo+Github Pages+Github Action 方案搭建个人博客，保姆级别哦！"><meta property="twitter:description" content="本文将详细介绍如何使用 Hugo+Github Pages+Github Action 方案搭建个人博客，保姆级别哦！"><meta property="twitter:card" content="summary"><meta name=keyword content="Java, Android, Kotlin"><link rel="shortcut icon" href=/img/favicon.ico><title>如何使用Github搭建个人博客 | 陈十二的博客</title><link rel=canonical href=/2022/11/02/Blog/><link rel=stylesheet href=/css/bootstrap.min.css><link rel=stylesheet href=/css/hugo-theme-cleanwhite.min.css><link rel=stylesheet href=/css/zanshang.css><link href=https://cdn.jsdelivr.net/gh/FortAwesome/Font-Awesome@5.15.1/css/all.css rel=stylesheet type=text/css><script src=/js/jquery.min.js></script>
+<script src=/js/bootstrap.min.js></script>
+<script src=/js/hux-blog.min.js></script>
+<script src=/js/lazysizes.min.js></script></head><nav class="navbar navbar-default navbar-custom navbar-fixed-top"><div class=container-fluid><div class="navbar-header page-scroll"><button type=button class=navbar-toggle>
+<span class=sr-only>Toggle navigation</span>
+<span class=icon-bar></span>
+<span class=icon-bar></span>
+<span class=icon-bar></span></button>
+<a class=navbar-brand href=/>JsonChen Blog</a></div><div id=huxblog_navbar><div class=navbar-collapse><ul class="nav navbar-nav navbar-right"><li><a href=/>All Posts</a></li><li><a href=/categories/tech>tech</a></li><li><a href=/archive/>ARCHIVE</a></li><li><a href=/notes/>NOTES</a></li><li><a href=/about/>ABOUT</a></li><li><a href=/search><i class="fa fa-search"></i></a></li></ul></div></div></div></nav><script>var $body=document.body,$toggle=document.querySelector(".navbar-toggle"),$navbar=document.querySelector("#huxblog_navbar"),$collapse=document.querySelector(".navbar-collapse");$toggle.addEventListener("click",handleMagic);function handleMagic(){$navbar.className.indexOf("in")>0?($navbar.className=" ",setTimeout(function(){$navbar.className.indexOf("in")<0&&($collapse.style.height="0px")},400)):($collapse.style.height="auto",$navbar.className+=" in")}</script><style type=text/css>header.intro-header{background-image:url(/images/post-bg-coffee.jpeg)}</style><header class=intro-header><div class=container><div class=row><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><div class=post-heading><div class=tags><a class=tag href=/tags/hugo title=Hugo>Hugo</a>
+<a class=tag href=/tags/github-pages title="Github Pages">Github Pages</a>
+<a class=tag href=/tags/github-action title="Github Action">Github Action</a>
+<a class=tag href=/tags/%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2 title=个人博客>个人博客</a></div><h1>如何使用Github搭建个人博客</h1><h2 class=subheading>Hugo+Github Pages+Github Action 方案</h2><span class=meta>Posted by
+陈十二
+on
+Wednesday, November 2, 2022</span></div></div></div></div></header><article><div class=container><div class=row><div class="col-lg-8 col-lg-offset-2
+col-md-10 col-md-offset-1
+post-container"><h1 id=简介>简介</h1><p>本文将详细介绍Github搭建个人博客的流程，其中，通过<code>hugo</code>搭建本地服务，托管在<code>Github Pages</code>上，并用<code>Github Action</code>实现了CI/CD，非常方便！<br><code>注：本文是以macOS系统来讲解的。</code></p><h1 id=搭建本地服务>搭建本地服务</h1><p>Hugo，号称世界上最快的构建网站的框架，凭借其惊人的速度和灵活性，让搭建网站变得十分有趣。下面，我们将安装Hugo，并搭建本地服务。</p><h2 id=安装hugo>安装Hugo</h2><p>推荐使用<code>homebrew</code>方式来安装<code>Hugo</code>，十分简单。</p><pre><code>brew install hugo
+</code></pre><p>等待完成，进行验证：</p><pre><code>hugo version
+</code></pre><h2 id=创建站点>创建站点</h2><p>通过<code>hugo</code>命令来创建一个新的web站点：</p><pre><code>hugo new site &quot;博客名&quot;
+</code></pre><p><img src=/materail/hugo_new_site.png alt=hugo_new_site></p><p>命令执行完毕，将会创建一个文件夹：</p><p><img src=/materail/hugo_site_folder.png alt=hugo_site_folder></p><h2 id=选择主题>选择主题</h2><p>推荐两个主题库： <a href=https://hexo.io/themes/>Hexo Themes</a> 和 <a href=https://themes.gohugo.io/>Hugo Themes</a><br>你可以自行选择一个喜欢的主题，并通过<code>git submodule add</code>命令安装至<code>theme</code>文件夹下（这里以<a href=https://github.com/zhaohuabing/hugo-theme-cleanwhite>hugo-theme-cleanwhite</a>主题为例）：</p><pre><code>git submodule add https://github.com/zhaohuabing/hugo-theme-cleanwhite.git themes/hugo-theme-cleanwhite
+</code></pre><p>通过命令启动<code>Hugo</code>服务器：</p><pre><code>hugo server -t hugo-theme-cleanwhite
+</code></pre><p>在<a href=http://localhost:1313/>http://localhost:1313/</a>将会看到由主题生成的示例网站。</p><p><img src=/materail/hugo_server.png alt=hugo_server></p><h2 id=配置hugo>配置Hugo</h2><p><code>config.toml</code>配置文件在根目录下，可根据自身的需求进行修改。可参考<a href=https://github.com/zhaohuabing/hugo-theme-cleanwhite>hugo-theme-cleanwhite</a>主题下的<code>exampleSite</code>文件夹中的文件。</p><p><img src=/materail/hugo-theme-cleanwhite.png alt=hugo-theme-cleanwhite></p><p>默认的文章存储在<code>./content/post</code>文件夹下，每当运行Hugo启动服务命令后，Hugo将自动生成静态网站文件至<code>. /public</code>文件夹中，此时我们只需要将新增的文件内容发布在网络上即可。</p><p>更详细的配置规则，可参考<a href=https://gohugo.io/getting-started/configuration/>Configure Hugo</a> 。</p><h2 id=写博客>写博客</h2><p>现在我们可以创建一篇文章了。执行下面的命令，会在<code>./content/post</code>文件夹下新增一个名为<code>hello-blog.md</code>的文件：</p><pre><code> hugo new post/hello-blog.md
+</code></pre><p>我们会看到，有默认的数据，将其进行修改后，就可以在下面编写文章了。
+<img src=/materail/hugo_hello_blog.png alt=hugo_hello_blog></p><h2 id=本地部署>本地部署</h2><p>执行命令，就可以直接通过<a href=http://localhost:1313/>http://localhost:1313/</a>地址在本地访问并预览网页了。</p><pre><code>hugo server -t hugo-theme-cleanwhite
+</code></pre><p>至此，Hugo本地服务已搭建完成。</p><h1 id=发布到github-pages>发布到Github Pages</h1><p>接下来，我们将搭建好的本地博客托管到Github，以<code>hello-blog.md</code>为例。</p><h2 id=前期准备>前期准备</h2><p><strong>1、Github账号</strong><br><strong>2、发布好的本地静态网页文件</strong>，即<code>hello-blog.md</code>执行hugo命令后<code>./public</code>目录下的结果。</p><h2 id=基本流程>基本流程</h2><p>下面我将介绍如何发布到<code>Github Pages</code>。</p><p><strong>1、创建新的Github仓库</strong><br>新建一个<code>public</code>仓库，并命名为<code>username.github.io</code>，其中<code>username</code>必须是github账户名！！！
+<img src=/materail/hugo_github_repository.png alt=hugo_github_repository></p><p><strong>2、将Github仓库拉到本地</strong><br>在你指定的目录位置，执行<code>git clone</code>命令，将远程仓库拉到本地。</p><pre><code>git clone https://github.com/username/username.github.io.git
+</code></pre><p><strong>3、将静态网页文件添加至Github仓库</strong><br>将<code>Hugo</code>命令生成的<code>./public</code>文件夹下的所有文件，拷贝至本地仓库，这一步可以手动拷贝，也可以用命令实现。</p><pre><code>cp -rf hugo-site/public/* username.github.io/
+git add --all
+git commit -m &quot;init commit&quot;
+</code></pre><p><strong>4、提交至Github仓库</strong></p><pre><code>git push -u origin main
+</code></pre><p><code>注：git操作，建议使用github客户端来完成，可以省去账号登录的工作。</code></p><p>提交完成后，在浏览器中输入<code>https://username.github.io/</code>，就能看到你的博客了。</p><h1 id=配置github-action实现cicd>配置Github Action实现CI/CD</h1><p>最后，我们要通过<code>Github Action</code>完成两件事：</p><p><strong>1、编译</strong>，生成静态网页文件<br><strong>2、部署</strong>，将静态网页文件拷贝到指定的位置</p><p>这样一来，我们只需要通过<code>git push</code>命令来触发<code>Github Action</code>就可以了。</p><h2 id=前期准备-1>前期准备</h2><p><strong>1、私有库</strong>，用于存放博客源码<br><strong>2、公开库</strong>，用于存放静态网页文件<code>（已有，username.github.io）</code></p><h2 id=基本流程-1>基本流程</h2><p><strong>1、创建私有库，配置Github Action</strong><br>在GitHub，创建一个私有仓库，命名为<code>hugo-blog</code>，并通过<code>git clone</code>命令将仓库拉到<code>hugo-site</code>目录下。</p><pre><code>git clone https://github.com/username/username.github.io.git &quot;/hugo-site&quot;
+</code></pre><p>在<code>./hugo-site/.github/workflows/</code>目录下创建一个<code>hugo.yml</code>文件，参考如下：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#ff79c6>name</span>: hugo blog
+</span></span><span style=display:flex><span><span style=color:#ff79c6>on</span>:
+</span></span><span style=display:flex><span>  <span style=color:#ff79c6>push</span>:
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>branches</span>:
+</span></span><span style=display:flex><span>      - main
+</span></span><span style=display:flex><span><span style=color:#ff79c6>jobs</span>:
+</span></span><span style=display:flex><span>  <span style=color:#ff79c6>build-deploy</span>:
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>runs-on</span>: ubuntu-latest
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>steps</span>:
+</span></span><span style=display:flex><span>      - <span style=color:#ff79c6>name</span>: Check out source
+</span></span><span style=display:flex><span>        <span style=color:#ff79c6>uses</span>: actions/checkout@v2
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      - <span style=color:#ff79c6>name</span>: Setup hugo
+</span></span><span style=display:flex><span>        <span style=color:#ff79c6>uses</span>: peaceiris/actions-hugo@v2
+</span></span><span style=display:flex><span>        <span style=color:#ff79c6>with</span>:
+</span></span><span style=display:flex><span>          <span style=color:#ff79c6>hugo-version</span>: <span style=color:#f1fa8c>&#34;0.104.3&#34;</span>
+</span></span><span style=display:flex><span>          <span style=color:#ff79c6>extended</span>: <span style=color:#ff79c6>true</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      - <span style=color:#ff79c6>name</span>: Build
+</span></span><span style=display:flex><span>        <span style=color:#ff79c6>run</span>: hugo --minify
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      - <span style=color:#ff79c6>name</span>: Deploy
+</span></span><span style=display:flex><span>        <span style=color:#ff79c6>uses</span>: peaceiris/actions-gh-pages@v3
+</span></span><span style=display:flex><span>        <span style=color:#ff79c6>with</span>:
+</span></span><span style=display:flex><span>          <span style=color:#ff79c6>personal_token</span>: ${{ secrets.PERSONAL_TOKEN }}
+</span></span><span style=display:flex><span>          <span style=color:#ff79c6>external_repository</span>: username/username.github.io
+</span></span><span style=display:flex><span>          <span style=color:#ff79c6>publish_dir</span>: ./public
+</span></span><span style=display:flex><span>          <span style=color:#ff79c6>publish_branch</span>: main
+</span></span></code></pre></div><p><strong>Github Action包含四个步骤：</strong></p><ul><li><strong>Check out source</strong>，拉取代码</li><li><strong>Setup hugo</strong>，准备Hugo环境</li><li><strong>Build</strong>，使用Hugo编译并生成静态网页文件</li><li><strong>Deploy</strong>，部署并发布到Github Pages</li></ul><p><code>注：其中的PERSONAL_TOKEN，在第2步中进行讲解。</code></p><p><strong>2、配置合适的TOKEN</strong>
+首先，需要生成一个<code>Personal access tokens</code>：</p><p>[1] 在GitHub个人主页，以此点击<code>Settings -> Developer settings -> Personal access tokens -> Tokens(classic)</code>，进入如下页面：
+<img src=/materail/hugo_personal_access_tokens.png alt=hugo_personal_access_tokens>
+[2] 点击<code>Generate new token(classic)</code>，在Note中输入名称，如GITHUB_ACTION_TOKEN，在<code>Select scopes</code>选择<code>workflow</code>：
+<img src=/materail/hugo_action_token.png alt=hugo_action_token>
+[3] 点击<code>Generate token</code>，将生成的<strong>token</strong>复制，为后续创建<code>secret</code>做准备；<br><code>（*** 一定要复制！！！一旦离开此页面，将无法再次查看此值 ***）</code></p><p>[4] 在私有库（<code>hugo-blog</code>）项目下，依次点击<code>Settings -> Secrets -> Actions</code>，进入添加<code>Action secrets</code>的页面，点击<code>New repository secret</code>按钮：
+<img src=/materail/hugo_action_secrets.png alt=hugo_action_secrets>
+[5] 新增secret，<code>Name</code>项输入<code>hugo.yml</code>中设置的PERSONAL_TOKEN，<code>Secret</code>项输入步骤[3]中复制的token值，然后点击<code>Add Secret</code>按钮，即可。<br><code>（注：Name的值，不能以GITHUB_开头，否则会创建失败）</code>
+<img src=/materail/hugo_new_secret.png alt=hugo_new_secret></p><p>至此，整个使用 <code>Hugo</code> + <code>Github Pages</code> + <code>Github Action</code> 方案搭建个人博客的过程已讲解完毕！</p><h1 id=结束语>结束语</h1><p>完成上述配置后，当我们写完一篇md文章后，通过<code>git push</code>命令或者Github客户端推送到远程仓库时，将会触发<code>GitHub Action</code>，
+按<code>hugo.yml</code>文件配置的工作流自动编译并生成静态网页文件，并推送到<code>Github Pages</code>仓库。当<code>Github Pages</code>仓库更新完成后，
+又会自动触发官方页面部署CI，实现网站的自动发布。</p><p>以上就是Hugo搭建本地服务、GitHub Pages自动部署和发布，实现了一个完整的自动发布系统，心动不如行动，抓紧用起来吧！</p><hr><ul class=pager><li class=previous><a href=/preface/ data-toggle=tooltip data-placement=top title=前言>&larr;
+Previous Post</a></li><li class=next><a href=/2022/11/03/Markdown/ data-toggle=tooltip data-placement=top title=Markdown语法大全>Next
+Post &rarr;</a></li></ul></div><div class="col-lg-2 col-lg-offset-0
+visible-lg-block
+sidebar-container
+catalog-container"><div class=side-catalog><hr class="hidden-sm hidden-xs"><h5><a class=catalog-toggle href=#>CATALOG</a></h5><ul class=catalog-body></ul></div></div><div class="col-lg-8 col-lg-offset-2
+col-md-10 col-md-offset-1
+sidebar-container"></div></div></div></article><footer><div class=container><div class=row><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><ul class="list-inline text-center"><li><a href=mailto:chen_xkang@163.com><span class="fa-stack fa-lg"><i class="fas fa-circle fa-stack-2x"></i>
+<i class="fas fa-envelope fa-stack-1x fa-inverse"></i></span></a></li><li><a target=_blank href=/images/wechat_me.jpeg><span class="fa-stack fa-lg"><i class="fas fa-circle fa-stack-2x"></i>
+<i class="fab fa-weixin fa-stack-1x fa-inverse"></i></span></a></li><li><a target=_blank href=https://github.com/chenxkang><span class="fa-stack fa-lg"><i class="fas fa-circle fa-stack-2x"></i>
+<i class="fab fa-github fa-stack-1x fa-inverse"></i></span></a></li></ul><p class="copyright text-muted">Copyright &copy; JsonChen Blog 2022<br><a href=https://github.com/chenxkang>JsonChen's Github</a> by <a href=https://chenxkang.github.io>陈十二</a> |
+<iframe style=margin-left:2px;margin-bottom:-5px frameborder=0 scrolling=0 width=100px height=20px src="https://ghbtns.com/github-btn.html?user=chenxkang&repo=chenxkang.github.io&type=star&count=true"></iframe></p></div></div></div></footer><script>function loadAsync(e,t){var s=document,o="script",n=s.createElement(o),i=s.getElementsByTagName(o)[0];n.src=e,t&&n.addEventListener("load",function(e){t(null,e)},!1),i.parentNode.insertBefore(n,i)}</script><script>$("#tag_cloud").length!==0&&loadAsync("/js/jquery.tagcloud.js",function(){$.fn.tagcloud.defaults={color:{start:"#bbbbee",end:"#0085a1"}},$("#tag_cloud a").tagcloud()})</script><script>loadAsync("https://cdn.jsdelivr.net/npm/fastclick@1.0.6/lib/fastclick.min.js",function(){var e=document.querySelector("nav");e&&FastClick.attach(e)})</script><script type=text/javascript>function generateCatalog(e){_containerSelector="div.post-container";var t,n,s,o,i,a=$(_containerSelector),r=a.find("h1,h2,h3,h4,h5,h6");return $(e).html(""),r.each(function(){t=$(this).prop("tagName").toLowerCase(),o="#"+$(this).prop("id"),n=$(this).text(),i=$('<a href="'+o+'" rel="nofollow">'+n+"</a>"),s=$('<li class="'+t+'_nav"></li>').append(i),$(e).append(s)}),!0}generateCatalog(".catalog-body"),$(".catalog-toggle").click(function(e){e.preventDefault(),$(".side-catalog").toggleClass("fold")}),loadAsync("/js/jquery.nav.js",function(){$(".catalog-body").onePageNav({currentClass:"active",changeHash:!1,easing:"swing",filter:"",scrollSpeed:700,scrollOffset:0,scrollThreshold:.2,begin:null,end:null,scrollChange:null,padding:80})})</script></body></html>
